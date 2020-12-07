@@ -1,5 +1,5 @@
 video_id="001"
-input_mp4file="001_ManUdhanMarathi.mp4"
+input_mp4file="video/001_ManUdhanMarathi.mp4"
 output_wavfile="Video${video_id}_$(date "+%Y.%m.%d-%H.%M.%S").wav"; 
 rm -rf $output_wavfile
 rm -rf video_fifo #remove the fifo if it exists
