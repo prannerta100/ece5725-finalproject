@@ -1,4 +1,4 @@
-import sys, re, 
+import sys, re 
 import soundfile as sf
 import pandas as pd
 import numpy as np
@@ -16,21 +16,29 @@ else:
     ref_file = re.sub('\.mp4', '.wav', sys.argv[2])
 
 #print the file names, before starting the scoring process
-print('Input file: 'src_file, ' Output File: ', ref_file)
+print('Input file: ', src_file, ' Output File: ', ref_file)
 
 #read the source and reference files
 data_src, samplerate_src = sf.read(src_file)
 data_ref, samplerate_ref = sf.read(ref_file)
 
+print("Yo")
+
 #choose the first channel from the reference audio, discard the rest
 data_ref = data_ref[:,0]
 
+print("creating dataframes now")
 #define pandas dataframes with the appropriate time index
 data_ref_df = pd.DataFrame({'ref':data_ref}, index = np.arange(len(data_ref)) / samplerate_ref)
 data_src_df = pd.DataFrame({'src':data_src}, index = np.arange(len(data_src)) / samplerate_src)
 
+print("joining dataframes...")
+
 #"outer" join the 2 data frames and then interpolate to fill in the gaps
-df = data_ref_df.join(data_src_df, how='outer').apply(pd.Series.interpolate)
+df = data_ref_df.iloc[0::10,:].join(data_src_df, how='outer').apply(pd.Series.interpolate)
+#df = pd.merge(data_ref_df.iloc[0::10, :], data_src_df, left_index=True, right_index=True, how='outer').apply(pd.Series.interpolate)
+
+print("dataframes joined")
 
 #find the max run times of each video, take the minimum
 #we calculate the score based on the minimum of the song time and the user's recording duration
@@ -38,6 +46,7 @@ df = data_ref_df.join(data_src_df, how='outer').apply(pd.Series.interpolate)
 run_time = min(max(data_ref_df.index), max(data_src_df.index))
 df = df.loc[df.index <= run_time]
 
+print("Yo")
 #correlation score
 correlation = 50 * min(np.abs(df.corr().iloc[0,1]), 0.03) / 0.03
 #persistence score

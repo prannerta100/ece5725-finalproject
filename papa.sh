@@ -23,6 +23,11 @@ sudo SDL_VIDEODRIVER=fbcon SDL_FBDEV=/dev/fb1 mplayer -input file=video_fifo -vo
 #record the user song
 arecord -D plughw:2,0 -f S32_LE -d `printf "%.0f" $(echo scale=3;$videolen | bc)` user_recordings/$output_wavfile
 
+
+#upload folder on Drive
+rclone copy user_recordings/$output_wavfile remote:backup/user_recordings/
+
+
 #misc, ignore!
 #Twinkle.mp4 #bigbuckbunny320p.mp4
 #mplayer -ao alsa:device=hw=1.0 Twinkle.mp4
