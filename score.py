@@ -3,13 +3,19 @@ import soundfile as sf
 import pandas as pd
 import numpy as np
 
+#src_file: user recording
+#ref_file: video from the user
+#to run the program, type "python3 score.py $output_wavfile $input_mp4file" on the command line or in the Shell script
+
 #min 3 arguments needed
 if len(sys.argv) < 3:
     sys.exit()
+#if >=3 arguments, great! Read the src_file (arg1) and ref_file (arg2)
 else:
     src_file = 'user_recordings/' + sys.argv[1]
     ref_file = re.sub('\.mp4', '.wav', sys.argv[2])
 
+#print the file names, before starting the scoring process
 print('Input file: 'src_file, ' Output File: ', ref_file)
 
 #read the source and reference files
